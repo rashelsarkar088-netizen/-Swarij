@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swaraj App v1.0</title>
+    <style>
+        body { background: #0a0a0a; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .screen { width: 100%; max-width: 400px; height: 100%; display: none; flex-direction: column; padding: 20px; box-sizing: border-box; }
+        .active { display: flex; }
+        h1 { color: #007bff; letter-spacing: 5px; }
+        input { padding: 15px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: white; font-size: 16px; }
+        button { padding: 15px; background: #007bff; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .header { display: flex; justify-content: space-between; font-size: 14px; color: #888; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .wallet { color: #28a745; font-weight: bold; }
+        .qr-box { background: white; padding: 20px; border-radius: 15px; width: 180px; margin: 30px auto; text-align: center; color: black; }
+        .qr-box img { width: 100%; }
+        /* Calculator Style */
+        .calc-display { background: #222; padding: 30px; font-size: 40px; text-align: right; border-radius: 10px; margin-bottom: 20px; height: 60px; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .calc-grid button { background: #333; height: 70px; font-size: 20px; margin: 0; }
+        .calc-grid button.equal { background: #28a745; }
+    </style>
+</head>
+<body>
+
+    <!-- Screen 1: Login -->
+    <div id="login-screen" class="screen active">
+        <div style="margin-top: 50px;">
+            <img src="https://via.placeholder.com/80/007bff/ffffff?text=S" style="border-radius: 50%;">
+            <h1>SWARAJ</h1>
+            <p style="color: #666;">Virtual Territory of K2</p>
+        </div>
+        <input type="text" id="swaraj-id" placeholder="Enter Swaraj-ID">
+        <button onclick="login()">LOGIN WITH OTP</button>
+    </div>
+
+    <!-- Screen 2: Dashboard -->
+    <div id="dashboard" class="screen">
+        <div class="header">
+            <span>ID: <b id="user-id-display"></b></span>
+            <span>Pulse: <b class="wallet">10 ৳ x 450</b></span>
+        </div>
+        <div class="qr-box">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SwarajID001" alt="QR">
+            <p style="font-size: 12px; margin-top: 10px;">DYNAMIC TRUST KEY</p>
+        </div>
+        <button onclick="alert('Live Feed: Garden-1 Active')">MAA APP (LIVE)</button>
+        <button onclick="openGhostMode()" style="background: #333;">GHOST MODE</button>
+        <button onclick="location.reload()" style="background: transparent; color: #555;">LOGOUT</button>
+    </div>
+
+    <!-- Screen 3: Ghost Mode (Calculator) -->
+    <div id="ghost-screen" class="screen">
+        <div class="calc-display" id="display">0</div>
+        <div class="calc-grid">
+            <button onclick="press(7)">7</button><button onclick="press(8)">8</button><button onclick="press(9)">9</button><button style="background:#f39c12">/</button>
+            <button onclick="press(4)">4</button><button onclick="press(5)">5</button><button onclick="press(6)">6</button><button style="background:#f39c12">*</button>
+            <button onclick="press(1)">1</button><button onclick="press(2)">2</button><button onclick="press(3)">3</button><button style="background:#f39c12">-</button>
+            <button onclick="press(0)">0</button><button onclick="resetCalc()">C</button><button class="equal" onclick="checkSecret()">=</button><button style="background:#f39c12">+</button>
+        </div>
+        <p style="color: #444; margin-top: 20px;">Standard Calculator v1.0</p>
+    </div>
+
+    <script>
+        function login() {
+            const id = document.getElementById('swaraj-id').value.trim();
+            if(id === 'SW-K2-001') {
+                document.getElementById('login-screen').classList.remove('active');
+                document.getElementById('dashboard').classList.add('active');
+                document.getElementById('user-id-display').innerText = id;
+            } else {
+                alert("Invalid Swaraj-ID! Access Denied.");
+            }
+        }
+
+        function openGhostMode() {
+            document.getElementById('dashboard').classList.remove('active');
+            document.getElementById('ghost-screen').classList.add('active');
+        }
+
+        let input = "";
+        function press(num) {
+            input += num;
+            document.getElementById('display').innerText = input;
+        }
+
+        function resetCalc() {
+            input = "";
+            document.getElementById('display').innerText = "0";
+        }
+
+        function checkSecret() {
+            if(input === "777") {
+                alert("Nexus Command Center: Access Granted. Welcome, General.");
+                // এখানে ভবিষ্যতে আমাদের গোপন ম্যাপ লোড হবে
+                resetCalc();
+            } else {
+                alert("Calculation Error: Result not found.");
+                resetCalc();
+            }
+        }
+    </script>
+</body>
+</html>
