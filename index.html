@@ -3,41 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swaraj Global v9.0</title>
+    <title>Swaraj Trial v10.0</title>
     <style>
         :root { --swaraj-green: #2d6a4f; --soft-white: #f8f9fa; --text-dark: #1b4332; --border: #e9ecef; --accent: #40916c; }
-        body { background: var(--soft-white); color: var(--text-dark); font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; }
+        body { background: var(--soft-white); color: var(--text-dark); font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; user-select: none; }
         
-        .screen { width: 100%; min-height: 100vh; display: none; flex-direction: column; padding: 15px; box-sizing: border-box; animation: fadeIn 0.3s ease; padding-bottom: 80px; }
+        .screen { width: 100%; min-height: 100vh; display: none; flex-direction: column; padding: 15px; box-sizing: border-box; padding-bottom: 90px; }
         .active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* European Minimalist UI */
-        .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 15px rgba(0,0,0,0.03); border: 1px solid var(--border); }
-        h2, h3 { color: var(--swaraj-green); font-weight: 600; margin: 10px 0; }
+        .card { background: white; border-radius: 16px; padding: 15px; margin-bottom: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border); }
+        h3 { color: var(--swaraj-green); margin: 5px 0; font-size: 18px; }
         
         /* Navigation */
-        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border); z-index: 1000; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 1000; }
         .nav-item { text-align: center; font-size: 11px; color: #adb5bd; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--swaraj-green); font-weight: bold; }
 
         /* Market Grid */
-        .category-header { font-size: 18px; font-weight: bold; margin: 20px 0 10px; border-left: 4px solid var(--swaraj-green); padding-left: 10px; }
         .market-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .product-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: 0.2s; }
-        .product-img { width: 100%; height: 100px; background: #f1f3f5; display: flex; align-items: center; justify-content: center; font-size: 30px; }
-        .product-info { padding: 10px; }
-        .maker-tag { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
-        .price { color: var(--swaraj-green); font-weight: bold; font-size: 13px; margin-top: 5px; display: block; }
+        .product-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); position: relative; }
+        .product-img { width: 100%; height: 90px; background: #f1f3f5; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+        .product-info { padding: 8px; }
+        .maker-tag { font-size: 8px; color: #888; text-transform: uppercase; font-weight: bold; }
+        .price { color: var(--swaraj-green); font-weight: bold; font-size: 12px; }
 
-        /* Buttons */
-        button { background: var(--swaraj-green); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 500; cursor: pointer; width: 100%; }
-        .ghost-btn { background: #343a40; margin-top: 10px; }
+        button { background: var(--swaraj-green); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; }
+        button:active { transform: scale(0.98); }
+        .buy-btn { padding: 5px; font-size: 11px; margin-top: 5px; }
 
-        /* Live Feed */
-        .live-box { width: 100%; height: 150px; background: #000; border-radius: 12px; position: relative; display: flex; align-items: center; justify-content: center; color: #444; }
-        .rec-dot { position: absolute; top: 10px; left: 10px; width: 8px; height: 8px; background: red; border-radius: 50%; animation: blink 1s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .wallet-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: var(--swaraj-green); color: white; padding: 15px; border-radius: 12px; }
+        
+        /* Order List */
+        .order-item { font-size: 12px; border-bottom: 1px solid #eee; padding: 5px 0; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
@@ -45,130 +43,150 @@
     <!-- ১. লগ-ইন -->
     <div id="login-screen" class="screen active">
         <div style="text-align:center; margin-top:80px;">
-            <h1 style="color:var(--swaraj-green); letter-spacing:4px;">SWARAJ</h1>
-            <p style="color:#6c757d;">The Future of Creation</p>
+            <h1 style="color:var(--swaraj-green); letter-spacing:3px;">SWARAJ</h1>
+            <p style="color:#6c757d; font-size:12px;">15-Day Field Trial (K2)</p>
         </div>
-        <div style="margin-top: 50px;">
-            <input type="text" id="access-key" placeholder="Enter Access Key (e.g. SW-K2-001)" style="width:100%; padding:15px; border-radius:10px; border:1px solid var(--border); margin-bottom:15px; box-sizing:border-box;">
-            <button onclick="authenticate()">Sign In</button>
+        <div style="margin-top: 40px;">
+            <input type="text" id="access-key" placeholder="আপনার আইডি দিন (যেমন: US-001)" style="width:100%; padding:15px; border-radius:10px; border:1px solid var(--border); margin-bottom:15px; box-sizing:border-box;">
+            <button onclick="authenticate()">প্রবেশ করুন</button>
         </div>
-        <p style="font-size:10px; color:#ced4da; text-align:center; margin-top:auto;">Master: SW-MASTER-999 | User: US-001</p>
+        <div style="font-size:10px; color:#adb5bd; text-align:center; margin-top:20px;">
+            Trial IDs: SW-K2-001, MA-001, TR-001, US-001 to US-005
+        </div>
     </div>
 
-    <!-- ২. কমান্ডারের ড্যাশবোর্ড (SW) -->
-    <div id="master-dash" class="screen">
-        <h3>Supreme Command</h3>
-        <div class="card">
-            <p style="font-size:12px; color:#888;">Economic Velocity</p>
-            <h2 style="margin:0;">৳ 890,450,000</h2>
+    <!-- ২. মেইন ড্যাশবোর্ড -->
+    <div id="main-dash" class="screen">
+        <div class="wallet-info">
+            <div><small>স্বরাজ আইডি</small><br><b id="user-id-tag">---</b></div>
+            <div style="text-align:right;"><small>ব্যালেন্স</small><br><b id="user-balance">৳ 0</b></div>
         </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <div class="card"><h4>Agents</h4><p>200</p></div>
-            <div class="card"><h4>Control</h4><p>20%</p></div>
+
+        <div id="role-content"></div>
+
+        <h3>আপনার অর্ডারসমূহ</h3>
+        <div class="card" id="order-list" style="max-height: 150px; overflow-y: auto;">
+            <p style="font-size:12px; color:#999;">এখনো কোনো কেনাকাটা হয়নি।</p>
         </div>
-        <button class="ghost-btn" onclick="alert('Opening Ghost Mode...')">Ghost Mode</button>
     </div>
 
-    <!-- ৩. মা পোর্টাল (MA) -->
-    <div id="mother-dash" class="screen">
-        <h3>Maternal Overwatch</h3>
-        <div class="live-box"><div class="rec-dot"></div>[ FEED: GARDEN-1 ]</div>
-        <div class="card" style="margin-top:15px;">
-            <p>Child: <b>Nourished</b></p>
-            <p>Tokens: <b>120</b></p>
-        </div>
-        <button onclick="alert('Tiffin Approved')">Approve Meal</button>
-        <button class="ghost-btn" style="background:transparent; border:1px solid var(--swaraj-green); color:var(--swaraj-green);">📞 Call Outlet</button>
-    </div>
-
-    <!-- ৪. মার্কেটপ্লেস (US) -->
+    <!-- ৩. মার্কেটপ্লেস -->
     <div id="market-screen" class="screen">
-        <h3>Swaraj Marketplace</h3>
-        
-        <!-- খাদ্য ও মশলা -->
-        <div class="category-header">Food & Spices</div>
-        <div class="market-grid" id="food-grid"></div>
-
-        <!-- পোশাক -->
-        <div class="category-header">Clothing</div>
-        <div class="market-grid" id="cloth-grid"></div>
-
-        <!-- ফার্নিচার -->
-        <div class="category-header">Furniture</div>
-        <div class="market-grid" id="furn-grid"></div>
-    </div>
-
-    <!-- ৫. অবজারভার (OB - DC/Principal) -->
-    <div id="observer-dash" class="screen">
-        <h3>Transparency Audit</h3>
-        <div class="card">
-            <p>Public Fund Utilization</p>
-            <h2 style="color:var(--swaraj-green)">৳ 1,250,000</h2>
-        </div>
-        <div class="card">
-            <p>Meals Served: 12,450</p>
-            <p>Integrity Score: 100%</p>
-        </div>
+        <h3>স্বরাজ মার্কেটপ্লেস</h3>
+        <div class="market-grid" id="product-grid"></div>
     </div>
 
     <!-- নেভিগেশন বার -->
     <div class="nav-bar" id="main-nav" style="display:none;">
-        <div class="nav-item" onclick="switchTab('dash')">🏠 Home</div>
-        <div class="nav-item" onclick="switchTab('market')">🛒 Market</div>
-        <div class="nav-item" onclick="location.reload()">🚪 Exit</div>
+        <div class="nav-item" id="nav-home" onclick="switchTab('dash')">🏠 হোম</div>
+        <div class="nav-item" id="nav-market" onclick="switchTab('market')">🛒 বাজার</div>
+        <div class="nav-item" onclick="location.reload()">🚪 প্রস্থান</div>
     </div>
 
     <script>
-        let userRole = "";
-        const categories = {
-            food: ["Organic Turmeric", "Power Bun", "Kaon Cookies", "Pure Honey", "Desi Ghee"],
-            cloth: ["Cotton Shirt", "Jute Bag", "Hand-woven Scarf", "School Uniform", "Traditional Vest"],
-            furn: ["Bamboo Chair", "Study Table", "Folding Stool", "Bedside Lamp", "Wall Shelf"]
-        };
+        let currentUser = null;
+        const products = [
+            { id: 1, name: "অরগানিক হলুদ", price: 450, icon: "🌿", maker: "Rahima, Ward 7" },
+            { id: 2, name: "স্মার্ট পুষ্টি বান", price: 20, icon: "🍞", maker: "Swaraj Bakery" },
+            { id: 3, name: "পাটজাত লাক্সারি ব্যাগ", price: 1200, icon: "👜", maker: "Sumi, Ward 7" },
+            { id: 4, name: "দেশি ঘি (৫০০ গ্রাম)", price: 850, icon: "🍯", maker: "Chor Farm" },
+            { id: 5, name: "মডুলার স্টাডি ল্যাম্প", price: 650, icon: "💡", maker: "Tech Unit" }
+        ];
 
         function authenticate() {
             const key = document.getElementById('access-key').value.trim().toUpperCase();
-            if(key === 'SW-MASTER-999' || key === 'SW-K2-001') { userRole = "MASTER"; showTab('master-dash'); }
-            else if(key.startsWith('MA')) { userRole = "MOTHER"; showTab('mother-dash'); }
-            else if(key.startsWith('OB')) { userRole = "OBSERVER"; showTab('observer-dash'); }
-            else if(key.startsWith('US')) { userRole = "USER"; showTab('market-screen'); }
-            else { alert("Access Denied"); return; }
+            if (!key) return alert("আইডি দিন");
+
+            // ডাটাবেজ সিমুলেশন (Local Storage)
+            let userData = JSON.parse(localStorage.getItem(key));
+            if (!userData) {
+                userData = { id: key, balance: 2000, orders: [] };
+                localStorage.setItem(key, JSON.stringify(userData));
+            }
             
+            currentUser = userData;
+            document.getElementById('user-id-tag').innerText = currentUser.id;
+            updateUI();
+            
+            document.getElementById('login-screen').classList.remove('active');
+            document.getElementById('main-dash').classList.add('active');
             document.getElementById('main-nav').style.display = 'flex';
             loadMarket();
+            loadRoleSpecifics();
+        }
+
+        function updateUI() {
+            document.getElementById('user-balance').innerText = "৳ " + currentUser.balance;
+            const list = document.getElementById('order-list');
+            if (currentUser.orders.length > 0) {
+                list.innerHTML = currentUser.orders.map(o => `
+                    <div class="order-item"><span>${o.name}</span> <b>৳ ${o.price}</b></div>
+                `).join('');
+            }
         }
 
         function loadMarket() {
-            const render = (id, list, icon) => {
-                const el = document.getElementById(id);
-                el.innerHTML = list.map(name => `
-                    <div class="product-card">
-                        <div class="product-img">${icon}</div>
-                        <div class="product-info">
-                            <div class="maker-tag">Made by Village Women</div>
-                            <b>${name}</b>
-                            <span class="price">$5.00 / ৳ 550</span>
-                        </div>
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = products.map(p => `
+                <div class="product-card">
+                    <div class="product-img">${p.icon}</div>
+                    <div class="product-info">
+                        <div class="maker-tag">Made by ${p.maker}</div>
+                        <div style="font-size:13px; font-weight:bold;">${p.name}</div>
+                        <div class="price">৳ ${p.price}</div>
+                        <button class="buy-btn" onclick="buyProduct(${p.id})">অর্ডার করুন</button>
                     </div>
-                `).join('');
-            };
-            render('food-grid', categories.food, '🍞');
-            render('cloth-grid', categories.cloth, '👕');
-            render('furn-grid', categories.furn, '🪑');
+                </div>
+            `).join('');
         }
 
-        function showTab(id) {
+        function buyProduct(pId) {
+            const p = products.find(x => x.id === pId);
+            if (currentUser.balance >= p.price) {
+                currentUser.balance -= p.price;
+                currentUser.orders.push({ name: p.name, price: p.price, date: new Date().toLocaleDateString() });
+                localStorage.setItem(currentUser.id, JSON.stringify(currentUser));
+                alert(p.name + " অর্ডার সফল!");
+                updateUI();
+                switchTab('dash');
+            } else {
+                alert("ব্যালেন্স পর্যাপ্ত নয়!");
+            }
+        }
+
+        function loadRoleSpecifics() {
+            const container = document.getElementById('role-content');
+            if (currentUser.id.startsWith('MA')) {
+                container.innerHTML = `
+                    <div class="card" style="background:#000; color:white; text-align:center; height:100px; padding-top:40px;">[ লাইভ ফিড: স্কুল আউটলেট ]</div>
+                    <button onclick="alert('অনুমোদিত')">খাবার অনুমোদন করুন</button>
+                `;
+            } else if (currentUser.id.startsWith('TR')) {
+                container.innerHTML = `
+                    <div class="card" style="text-align:center;">📷 QR স্ক্যানার সচল</div>
+                    <input type="number" placeholder="ছাত্রের রেটিং (১-৫)">
+                    <button style="background:#6f42c1;">টোকেন দিন</button>
+                `;
+            } else if (currentUser.id === 'SW-K2-001') {
+                container.innerHTML = `
+                    <div class="card" style="border-left-color:gold;">
+                        <h3>কমান্ডার ড্যাশবোর্ড</h3>
+                        <p>১০ ৳ স্পন্দন: <b>৪৫০,০০০</b></p>
+                        <p>সক্রিয় সৈনিক: <b>১০ (ট্রায়াল)</b></p>
+                    </div>
+                `;
+            }
+        }
+
+        function switchTab(tab) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        function switchTab(type) {
-            if(type === 'market') showTab('market-screen');
-            else if(type === 'dash') {
-                if(userRole === "MASTER") showTab('master-dash');
-                else if(userRole === "MOTHER") showTab('mother-dash');
-                else if(userRole === "OBSERVER") showTab('observer-dash');
-                else showTab('market-screen');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (tab === 'dash') {
+                document.getElementById('main-dash').classList.add('active');
+                document.getElementById('nav-home').classList.add('active');
+            } else {
+                document.getElementById('market-screen').classList.add('active');
+                document.getElementById('nav-market').classList.add('active');
             }
         }
     </script>
