@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swaraj Super App v5.0</title>
+    <title>Swaraj Super App v6.0</title>
     <style>
-        :root { --primary: #007bff; --success: #28a745; --dark: #0a0a0a; --gray: #1a1a1a; --accent: #f39c12; --danger: #dc3545; }
+        :root { --primary: #007bff; --success: #28a745; --dark: #0a0a0a; --gray: #1a1a1a; --accent: #f39c12; --danger: #dc3545; --purple: #6f42c1; }
         body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; }
         .screen { width: 100%; min-height: 100vh; display: none; flex-direction: column; padding: 15px; box-sizing: border-box; }
         .active { display: flex; }
@@ -13,104 +13,132 @@
         input, select, textarea { padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: var(--gray); color: white; width: 100%; box-sizing: border-box; }
         button { padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 5px; }
         .card { background: var(--gray); padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--primary); }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .stat-box { background: #222; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #333; }
+        .pulse-text { color: var(--success); font-size: 24px; font-weight: bold; }
         
-        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
-        .category-card { background: #222; padding: 20px; border-radius: 10px; text-align: center; border: 1px solid #333; cursor: pointer; }
-        .category-card:active { background: var(--primary); }
-        .icon { font-size: 30px; margin-bottom: 10px; display: block; }
-        
-        .product-item { display: flex; justify-content: space-between; align-items: center; background: #111; padding: 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #333; }
-        .product-info h4 { margin: 0; color: var(--accent); }
-        .product-info p { margin: 5px 0 0; font-size: 12px; color: #888; }
-        .buy-btn { width: auto; padding: 8px 15px; background: var(--success); font-size: 12px; }
+        /* Live Feed */
+        .live-feed { width: 100%; height: 150px; background: #000; border-radius: 10px; display: flex; justify-content: center; align-items: center; position: relative; border: 1px solid red; }
+        .dot { width: 10px; height: 10px; background: red; border-radius: 50%; animation: blink 1s infinite; position: absolute; top: 10px; left: 10px; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
 
-        .wallet-bar { display: flex; justify-content: space-between; background: #111; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
-        
         /* Calculator Mask */
         .calc-display { background: #222; padding: 20px; font-size: 30px; text-align: right; border-radius: 10px; margin-bottom: 10px; height: 50px; }
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .calc-grid button { background: #333; height: 60px; margin: 0; color: white; font-size: 20px; border-radius: 8px; border: none; }
-        
-        .live-feed { width: 100%; height: 150px; background: #000; border-radius: 10px; display: flex; justify-content: center; align-items: center; position: relative; }
-        .dot { width: 10px; height: 10px; background: red; border-radius: 50%; animation: blink 1s infinite; position: absolute; top: 10px; left: 10px; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+        .calc-grid button { background: #333; height: 60px; margin: 0; color: white; border: none; }
     </style>
 </head>
 <body>
 
-    <!-- ১. লগ-ইন স্ক্রিন -->
+    <!-- ১. সার্বজনীন লগ-ইন -->
     <div id="login-screen" class="screen active">
         <div style="text-align:center; margin-top:40px;">
             <div style="font-size: 50px;">☀️</div>
             <h1>SWARAJ</h1>
             <p style="color:#666;">Virtual Territory of K2</p>
         </div>
-        <input type="text" id="swaraj-id" placeholder="আপনার স্বরাজ-আইডি দিন (US-001)">
+        <input type="text" id="swaraj-id" placeholder="আপনার আইডি দিন (যেমন: SW-K2-001)">
         <button onclick="handleLogin()">প্রবেশ করুন</button>
-        <p style="color:#444; font-size:11px; text-align:center; margin-top:20px;">ID: SW-K2-001 (Commander) | US-001 (User)</p>
+        <div style="font-size:10px; color:#444; margin-top:20px; text-align:center;">
+            SW: Commander | MA: Mother | TR: Teacher | RS: Researcher | AU: Auditor | OB: Observer | US: User
+        </div>
     </div>
 
-    <!-- ২. নাগরিক মার্কেটপ্লেস -->
-    <div id="user-dash" class="screen">
-        <div class="wallet-bar">
-            <span>ID: <b id="display-user-id"></b></span>
-            <span>ব্যালেন্স: <b style="color:var(--success);">৳ <span id="user-balance">450</span></b></span>
-        </div>
-        
-        <div id="category-view">
-            <h3 style="text-align:left;">🛒 পণ্য ক্যাটাগরি</h3>
-            <div class="grid-container">
-                <div class="category-card" onclick="showProducts('food')">
-                    <span class="icon">🍞</span><span class="label">খাদ্য ও মশলা</span>
-                </div>
-                <div class="category-card" onclick="showProducts('cloth')">
-                    <span class="icon">👕</span><span class="label">পোশাক</span>
-                </div>
-                <div class="category-card" onclick="showProducts('furniture')">
-                    <span class="icon">🪑</span><span class="label">ফার্নিচার</span>
-                </div>
-                <div class="category-card" onclick="alert('শীঘ্রই আসছে...')">
-                    <span class="icon">🔌</span><span class="label">অ্যাপ্লায়েন্স</span>
-                </div>
-            </div>
-            <h3 style="text-align:left; margin-top:20px;">🛠️ সেবা ক্যাটাগরি</h3>
-            <div class="grid-container">
-                <div class="category-card" onclick="showProducts('health')">
-                    <span class="icon">🏥</span><span class="label">স্বাস্থ্য সেবা</span>
-                </div>
-                <div class="category-card" onclick="showProducts('edu')">
-                    <span class="icon">📚</span><span class="label">শিক্ষা</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- ডাইনামিক পণ্য তালিকা -->
-        <div id="product-view" style="display:none;">
-            <button onclick="showCategories()" style="background:#333; margin-bottom:15px;">⬅️ ফিরে যান</button>
-            <h3 id="list-title">পণ্য তালিকা</h3>
-            <div id="product-list"></div>
-        </div>
-        
-        <button onclick="logout()" style="margin-top:20px; background:#333;">লগ-আউট</button>
-    </div>
-
-    <!-- ৩. কমান্ডারের ড্যাশবোর্ড -->
+    <!-- ২. কমান্ডারের ড্যাশবোর্ড (SW) -->
     <div id="commander-dash" class="screen">
         <h2>K2-HQ কমান্ড সেন্টার</h2>
-        <div class="card" style="border-color:var(--success); text-align:center;">
+        <div class="stat-box">
             <p>১০ ৳ স্পন্দন (Velocity)</p>
-            <h1 id="hq-pulse" style="color:var(--success); margin:0;">450,000</h1>
+            <div class="pulse-text" id="hq-pulse">450,000</div>
         </div>
-        <div class="card">
-            <h3>অপারেশন স্ট্যাটাস</h3>
-            <p>সৈনিক: ২০০ | পরিবার: ৪,০০০</p>
-            <p>অর্থনৈতিক নিয়ন্ত্রণ: ৪.৫%</p>
+        <div class="grid" style="margin-top:10px;">
+            <div class="stat-box"><h3>সৈনিক</h3><p>২০০</p></div>
+            <div class="stat-box"><h3>নিয়ন্ত্রণ</h3><p>৪.৫%</p></div>
         </div>
-        <button onclick="openGhostMode()" style="background:#333;">GHOST MODE (গোপন)</button>
+        <button onclick="openGhostMode()" style="background:#333;">GHOST MODE</button>
         <button onclick="logout()">লগ-আউট</button>
     </div>
 
-    <!-- ৪. ঘোস্ট মোড (ক্যালকুলেটর) -->
+    <!-- ৩. মা পোর্টাল (MA) -->
+    <div id="mother-dash" class="screen">
+        <h2>মা পোর্টাল</h2>
+        <div class="live-feed"><div class="dot"></div><p>LIVE: GARDEN-1</p></div>
+        <div class="card">
+            <h3>সন্তানের পুষ্টি রিপোর্ট</h3>
+            <p>মেনু: সবজি-কিমা পোলাও | ৩৫০ kcal</p>
+        </div>
+        <button onclick="alert('খাবার অনুমোদিত। স্পন্দন রেকর্ড করা হলো।')" style="background:var(--success);">খাবার অনুমোদন করুন</button>
+        <button onclick="logout()">লগ-আউট</button>
+    </div>
+
+    <!-- ৪. শিক্ষক পোর্টাল (TR) -->
+    <div id="teacher-dash" class="screen">
+        <h2>শিক্ষক পোর্টাল</h2>
+        <div class="card" style="text-align:center; padding:30px;">
+            <div style="font-size:40px;">📷</div>
+            <p>QR কোড স্ক্যান করুন</p>
+        </div>
+        <input type="number" placeholder="ছাত্রের রেটিং (১-৫)">
+        <button style="background:var(--purple);">টোকেন প্রদান করুন</button>
+        <button onclick="logout()">লগ-আউট</button>
+    </div>
+
+    <!-- ৫. গবেষক ড্যাশবোর্ড (RS) -->
+    <div id="researcher-dash" class="screen">
+        <h2>ফিল্ড রিসার্চ পোর্টাল</h2>
+        <div class="card">
+            <p>আজকের টাস্ক: ৫টি পরিবার জরিপ</p>
+            <p>অর্জিত স্টাইপেন্ড: ৳ ১৫০</p>
+        </div>
+        <input type="text" placeholder="পরিবার আইডি">
+        <textarea placeholder="ব্যয়ের তথ্য ইনপুট দিন..."></textarea>
+        <button>ডাটা সিঙ্ক করুন</button>
+        <button onclick="logout()">লগ-আউট</button>
+    </div>
+
+    <!-- ৬. অডিটর ড্যাশবোর্ড (AU) -->
+    <div id="auditor-dash" class="screen">
+        <h2>সিস্টেম অডিট (কলেজ শিক্ষক)</h2>
+        <div class="card">
+            <h3>ইমপ্যাক্ট অ্যানালিটিক্স</h3>
+            <p>পুষ্টির মান: ৯৮% (ভেরিফাইড)</p>
+            <p>লিকেজ গ্যাপ: ০.০২%</p>
+        </div>
+        <button style="background:var(--accent);">রিপোর্ট ডাউনলোড করুন</button>
+        <button onclick="logout()">লগ-আউট</button>
+    </div>
+
+    <!-- ৭. অবজারভার ড্যাশবোর্ড (OB - DC/Principal) -->
+    <div id="observer-dash" class="screen">
+        <h2>স্বচ্ছতা ড্যাশবোর্ড (DC/Principal)</h2>
+        <div class="stat-box">
+            <p>সরকারি ফাণ্ড ব্যবহার</p>
+            <div class="pulse-text" style="color:var(--primary);">৳ ১২,৫০,০০০</div>
+        </div>
+        <div class="card" style="margin-top:10px;">
+            <p>সফল বিতরণ: ১২,৪৫০ প্যাকেট</p>
+            <p>অভিযোগ: ০টি</p>
+        </div>
+        <button onclick="logout()">লগ-আউট</button>
+    </div>
+
+    <!-- ৮. সাধারণ ইউজার (US) -->
+    <div id="user-dash" class="screen">
+        <div style="display:flex; justify-content:space-between;">
+            <span>ID: <b id="display-user-id"></b></span>
+            <span>ব্যালেন্স: <b style="color:var(--success);">৳ ৪৫০</b></span>
+        </div>
+        <h3>🛒 স্বরাজ মার্কেটপ্লেস</h3>
+        <div class="grid">
+            <div class="stat-box" onclick="alert('খাদ্য তালিকা লোড হচ্ছে...')">🍞<br>খাদ্য</div>
+            <div class="stat-box" onclick="alert('পোশাক তালিকা লোড হচ্ছে...')">👕<br>পোশাক</div>
+            <div class="stat-box" onclick="alert('স্বাস্থ্য সেবা...')">🏥<br>স্বাস্থ্য</div>
+            <div class="stat-box" onclick="alert('শিক্ষা...')">📚<br>শিক্ষা</div>
+        </div>
+        <button onclick="logout()" style="margin-top:auto;">লগ-আউট</button>
+    </div>
+
+    <!-- ৯. ঘোস্ট মোড (ক্যালকুলেটর) -->
     <div id="ghost-screen" class="screen">
         <div class="calc-display" id="display">0</div>
         <div class="calc-grid">
@@ -119,94 +147,24 @@
             <button onclick="press(1)">1</button><button onclick="press(2)">2</button><button onclick="press(3)">3</button><button>-</button>
             <button onclick="press(0)">0</button><button onclick="resetCalc()">C</button><button onclick="checkSecret()" style="background:var(--success);">=</button><button>+</button>
         </div>
-        <p style="color:#444; text-align:center; margin-top:20px;">Standard Calculator v1.0</p>
-    </div>
-
-    <!-- ৫. গোপন সৈনিক এনরোলমেন্ট -->
-    <div id="enrollment-screen" class="screen">
-        <h2>সৈনিক এনরোলমেন্ট</h2>
-        <p style="color:yellow; font-size:12px; text-align:center;">গোপনীয়তা বজায় রাখুন। তথ্য সরাসরি K2-HQ এ যাবে।</p>
-        <input type="text" placeholder="পূর্ণ নাম">
-        <select>
-            <option>রোল নির্বাচন করুন</option>
-            <option>ফিল্ড অফিসার</option>
-            <option>ছাত্র-এজেন্ট</option>
-            <option>ফুড সোলজার</option>
-        </select>
-        <textarea placeholder="পরিবারের মাসিক ব্যয়ের তথ্য (মশলা, চাল, টিফিন)"></textarea>
-        <button onclick="alert('ডাটা এনক্রিপ্ট করা হয়েছে।'); location.reload();">ডাটা লক করুন</button>
     </div>
 
     <script>
-        let pulse = 450000;
-        let balance = 450;
-
-        const products = {
-            food: [
-                { name: "স্মার্ট পুষ্টি বান", price: 20, desc: "৩৫০ kcal | হাই-প্রোটিন" },
-                { name: "অরগানিক হলুদ", price: 40, desc: "১০০ গ্রাম | বিশুদ্ধ" }
-            ],
-            cloth: [
-                { name: "ইউরোপীয় ডিজাইন শার্ট", price: 450, desc: "১০০% কটন | প্রিমিয়াম" },
-                { name: "স্কুল ইউনিফর্ম সেট", price: 300, desc: "টেকসই ও আরামদায়ক" }
-            ],
-            furniture: [
-                { name: "মডুলার স্টাডি টেবিল", price: 1200, desc: "রিসাইকেল মেটেরিয়াল" },
-                { name: "ইকো-চেয়ার", price: 800, desc: "লাক্সারি ফিনিশিং" }
-            ],
-            health: [
-                { name: "ডাক্তার পরামর্শ", price: 100, desc: "ডিজিটাল প্রেসক্রিপশন" },
-                { name: "অ্যাম্বুলেন্স বুকিং", price: 0, desc: "জরুরি সেবার জন্য" }
-            ],
-            edu: [
-                { name: "ভাষা শিক্ষা কোর্স", price: 200, desc: "মাসিক ফি | অনলাইন" },
-                { name: "ডিজিটাল লাইব্রেরি", price: 50, desc: "আনলিমিটেড এক্সেস" }
-            ]
-        };
-
         function handleLogin() {
-            const id = document.getElementById('swaraj-id').value.trim();
+            const id = document.getElementById('swaraj-id').value.trim().toUpperCase();
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            if(id === 'SW-K2-001') {
-                document.getElementById('commander-dash').classList.add('active');
-                document.getElementById('hq-pulse').innerText = pulse.toLocaleString();
-            } else if(id.startsWith('US')) {
+            
+            if(id === 'SW-K2-001') document.getElementById('commander-dash').classList.add('active');
+            else if(id.startsWith('MA')) document.getElementById('mother-dash').classList.add('active');
+            else if(id.startsWith('TR')) document.getElementById('teacher-dash').classList.add('active');
+            else if(id.startsWith('RS')) document.getElementById('researcher-dash').classList.add('active');
+            else if(id.startsWith('AU')) document.getElementById('auditor-dash').classList.add('active');
+            else if(id.startsWith('OB')) document.getElementById('observer-dash').classList.add('active');
+            else if(id.startsWith('US')) {
                 document.getElementById('user-dash').classList.add('active');
                 document.getElementById('display-user-id').innerText = id;
             }
-        }
-
-        function showProducts(cat) {
-            document.getElementById('category-view').style.display = 'none';
-            document.getElementById('product-view').style.display = 'block';
-            const list = document.getElementById('product-list');
-            list.innerHTML = "";
-            products[cat].forEach(p => {
-                list.innerHTML += `
-                    <div class="product-item">
-                        <div class="product-info">
-                            <h4>${p.name}</h4>
-                            <p>${p.desc} | ৳ ${p.price}</p>
-                        </div>
-                        <button class="buy-btn" onclick="orderProduct('${p.name}', ${p.price})">অর্ডার</button>
-                    </div>
-                `;
-            });
-        }
-
-        function showCategories() {
-            document.getElementById('category-view').style.display = 'block';
-            document.getElementById('product-view').style.display = 'none';
-        }
-
-        function orderProduct(name, price) {
-            if(balance >= price) {
-                balance -= price;
-                pulse += (price / 10);
-                document.getElementById('user-balance').innerText = balance;
-                alert(name + " অর্ডার সফল! ১০ ৳ স্পন্দন K2-HQ এ পাঠানো হয়েছে।");
-                showCategories();
-            } else { alert("পর্যাপ্ত টোকেন নেই!"); }
+            else alert("ভুল আইডি! সঠিক প্রিফিক্স ব্যবহার করুন (SW, MA, TR, RS, AU, OB, US)");
         }
 
         function openGhostMode() {
@@ -218,11 +176,8 @@
         function press(num) { calcInput += num; document.getElementById('display').innerText = calcInput; }
         function resetCalc() { calcInput = ""; document.getElementById('display').innerText = "0"; }
         function checkSecret() {
-            if(calcInput === "777") {
-                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-                document.getElementById('enrollment-screen').classList.add('active');
-                resetCalc();
-            } else { alert("Error"); resetCalc(); }
+            if(calcInput === "777") { alert("Nexus: সৈনিক এনরোলমেন্ট সচল।"); resetCalc(); }
+            else { alert("Error"); resetCalc(); }
         }
         function logout() { location.reload(); }
     </script>
