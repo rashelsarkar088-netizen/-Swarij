@@ -3,134 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swaraj Global v8.0</title>
+    <title>Swaraj Global v9.0</title>
     <style>
-        :root { --swaraj-green: #2d6a4f; --soft-white: #f8f9fa; --text-dark: #1b4332; --border: #dee2e6; }
-        body { background: var(--soft-white); color: var(--text-dark); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; }
+        :root { --swaraj-green: #2d6a4f; --soft-white: #f8f9fa; --text-dark: #1b4332; --border: #e9ecef; --accent: #40916c; }
+        body { background: var(--soft-white); color: var(--text-dark); font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; }
         
-        .screen { width: 100%; min-height: 100vh; display: none; flex-direction: column; padding: 20px; box-sizing: border-box; animation: fadeIn 0.4s ease-in-out; }
+        .screen { width: 100%; min-height: 100vh; display: none; flex-direction: column; padding: 15px; box-sizing: border-box; animation: fadeIn 0.3s ease; padding-bottom: 80px; }
         .active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* European Minimalist Cards */
-        .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+        /* European Minimalist UI */
+        .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 15px rgba(0,0,0,0.03); border: 1px solid var(--border); }
+        h2, h3 { color: var(--swaraj-green); font-weight: 600; margin: 10px 0; }
         
-        h1, h2, h3 { color: var(--swaraj-green); font-weight: 600; margin: 10px 0; }
-        
-        /* Unified Navigation */
-        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 1000; }
-        .nav-item { text-align: center; font-size: 12px; color: #6c757d; cursor: pointer; flex: 1; }
+        /* Navigation */
+        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border); z-index: 1000; }
+        .nav-item { text-align: center; font-size: 11px; color: #adb5bd; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--swaraj-green); font-weight: bold; }
 
-        /* Buttons */
-        button { background: var(--swaraj-green); color: white; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; transition: 0.2s; }
-        button:active { transform: scale(0.98); opacity: 0.9; }
-        .btn-outline { background: transparent; border: 1px solid var(--swaraj-green); color: var(--swaraj-green); }
-
         /* Market Grid */
-        .market-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .product-card { background: white; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
-        .product-img { width: 100%; height: 120px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+        .category-header { font-size: 18px; font-weight: bold; margin: 20px 0 10px; border-left: 4px solid var(--swaraj-green); padding-left: 10px; }
+        .market-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .product-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: 0.2s; }
+        .product-img { width: 100%; height: 100px; background: #f1f3f5; display: flex; align-items: center; justify-content: center; font-size: 30px; }
         .product-info { padding: 10px; }
-        .maker-tag { font-size: 10px; color: #888; text-transform: uppercase; }
+        .maker-tag { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+        .price { color: var(--swaraj-green); font-weight: bold; font-size: 13px; margin-top: 5px; display: block; }
 
-        /* Status Bar */
-        .status-bar { font-size: 12px; text-align: center; padding: 5px; background: #e9ecef; color: #495057; }
+        /* Buttons */
+        button { background: var(--swaraj-green); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 500; cursor: pointer; width: 100%; }
+        .ghost-btn { background: #343a40; margin-top: 10px; }
+
+        /* Live Feed */
+        .live-box { width: 100%; height: 150px; background: #000; border-radius: 12px; position: relative; display: flex; align-items: center; justify-content: center; color: #444; }
+        .rec-dot { position: absolute; top: 10px; left: 10px; width: 8px; height: 8px; background: red; border-radius: 50%; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
 <body>
 
-    <div class="status-bar" id="connection-status">● System Online | Global Sync Active</div>
-
-    <!-- ১. লগ-ইন স্ক্রিন -->
+    <!-- ১. লগ-ইন -->
     <div id="login-screen" class="screen active">
-        <div style="text-align:center; margin-top:60px;">
-            <div style="font-size: 40px; color: var(--swaraj-green);">S W A R A J</div>
-            <p style="color:#6c757d; letter-spacing: 1px;">Empowering Creation</p>
+        <div style="text-align:center; margin-top:80px;">
+            <h1 style="color:var(--swaraj-green); letter-spacing:4px;">SWARAJ</h1>
+            <p style="color:#6c757d;">The Future of Creation</p>
         </div>
-        <div style="margin-top: 40px;">
-            <input type="text" id="access-key" placeholder="Enter Access Key (e.g. US-001)" style="width:100%; padding:15px; border-radius:8px; border:1px solid var(--border); margin-bottom:10px; box-sizing:border-box;">
-            <button onclick="authenticate()" style="width:100%;">Sign In</button>
+        <div style="margin-top: 50px;">
+            <input type="text" id="access-key" placeholder="Enter Access Key (e.g. SW-K2-001)" style="width:100%; padding:15px; border-radius:10px; border:1px solid var(--border); margin-bottom:15px; box-sizing:border-box;">
+            <button onclick="authenticate()">Sign In</button>
         </div>
-        <p style="font-size:11px; color:#adb5bd; text-align:center; margin-top:auto;">Master Code: SW-MASTER-999</p>
+        <p style="font-size:10px; color:#ced4da; text-align:center; margin-top:auto;">Master: SW-MASTER-999 | User: US-001</p>
     </div>
 
-    <!-- ২. মা ড্যাশবোর্ড (Maternal Dashboard) -->
-    <div id="mother-dash" class="screen">
-        <h3>Maternal Overwatch</h3>
-        <div class="card" style="background:#000; height:180px; display:flex; align-items:center; justify-content:center; color:white;">
-            [ LIVE FEED: SCHOOL OUTLET ]
-        </div>
-        <div class="market-grid">
-            <button onclick="alert('Calling Outlet...')">📞 Call Outlet</button>
-            <button onclick="alert('Tiffin Request Sent')">🕒 Tiffin Connect</button>
-        </div>
-        <div class="card" style="margin-top:15px;">
-            <p>Child Status: <b>Healthy & Nourished</b></p>
-            <p>Bonus Tokens: <b>120</b></p>
-        </div>
-    </div>
-
-    <!-- ৩. গ্লোবাল মার্কেটপ্লেস (Marketplace) -->
-    <div id="market-screen" class="screen">
-        <h3>Swaraj Marketplace</h3>
-        <div class="market-grid">
-            <div class="product-card" onclick="openProduct('Organic Spice')">
-                <div class="product-img">🌿</div>
-                <div class="product-info">
-                    <div class="maker-tag">Made by Rahima, Ward 7</div>
-                    <b>Organic Turmeric</b><br>
-                    <span style="color:var(--swaraj-green)">$4.00 / ৳ 450</span>
-                </div>
-            </div>
-            <div class="product-card" onclick="openProduct('Handicraft')">
-                <div class="product-img">👜</div>
-                <div class="product-info">
-                    <div class="maker-tag">Made by Sumi, Ward 7</div>
-                    <b>Jute Luxury Bag</b><br>
-                    <span style="color:var(--swaraj-green)">$25.00 / ৳ 2800</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ৪. সুপ্রিম কমান্ড (Master Dashboard) -->
+    <!-- ২. কমান্ডারের ড্যাশবোর্ড (SW) -->
     <div id="master-dash" class="screen">
         <h3>Supreme Command</h3>
         <div class="card">
-            <p>Economic Velocity: <b style="color:var(--swaraj-green);">৳ 890M</b></p>
-            <p>Active Agents: <b>200</b></p>
-            <p>Global Recognition: <b>Pending</b></p>
+            <p style="font-size:12px; color:#888;">Economic Velocity</p>
+            <h2 style="margin:0;">৳ 890,450,000</h2>
         </div>
-        <button class="btn-outline" onclick="alert('Opening Analytics...')">View Full System Audit</button>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="card"><h4>Agents</h4><p>200</p></div>
+            <div class="card"><h4>Control</h4><p>20%</p></div>
+        </div>
+        <button class="ghost-btn" onclick="alert('Opening Ghost Mode...')">Ghost Mode</button>
+    </div>
+
+    <!-- ৩. মা পোর্টাল (MA) -->
+    <div id="mother-dash" class="screen">
+        <h3>Maternal Overwatch</h3>
+        <div class="live-box"><div class="rec-dot"></div>[ FEED: GARDEN-1 ]</div>
+        <div class="card" style="margin-top:15px;">
+            <p>Child: <b>Nourished</b></p>
+            <p>Tokens: <b>120</b></p>
+        </div>
+        <button onclick="alert('Tiffin Approved')">Approve Meal</button>
+        <button class="ghost-btn" style="background:transparent; border:1px solid var(--swaraj-green); color:var(--swaraj-green);">📞 Call Outlet</button>
+    </div>
+
+    <!-- ৪. মার্কেটপ্লেস (US) -->
+    <div id="market-screen" class="screen">
+        <h3>Swaraj Marketplace</h3>
+        
+        <!-- খাদ্য ও মশলা -->
+        <div class="category-header">Food & Spices</div>
+        <div class="market-grid" id="food-grid"></div>
+
+        <!-- পোশাক -->
+        <div class="category-header">Clothing</div>
+        <div class="market-grid" id="cloth-grid"></div>
+
+        <!-- ফার্নিচার -->
+        <div class="category-header">Furniture</div>
+        <div class="market-grid" id="furn-grid"></div>
+    </div>
+
+    <!-- ৫. অবজারভার (OB - DC/Principal) -->
+    <div id="observer-dash" class="screen">
+        <h3>Transparency Audit</h3>
+        <div class="card">
+            <p>Public Fund Utilization</p>
+            <h2 style="color:var(--swaraj-green)">৳ 1,250,000</h2>
+        </div>
+        <div class="card">
+            <p>Meals Served: 12,450</p>
+            <p>Integrity Score: 100%</p>
+        </div>
     </div>
 
     <!-- নেভিগেশন বার -->
     <div class="nav-bar" id="main-nav" style="display:none;">
-        <div class="nav-item" onclick="switchTab('dash')">🏠 Dashboard</div>
+        <div class="nav-item" onclick="switchTab('dash')">🏠 Home</div>
         <div class="nav-item" onclick="switchTab('market')">🛒 Market</div>
         <div class="nav-item" onclick="location.reload()">🚪 Exit</div>
     </div>
 
     <script>
         let userRole = "";
+        const categories = {
+            food: ["Organic Turmeric", "Power Bun", "Kaon Cookies", "Pure Honey", "Desi Ghee"],
+            cloth: ["Cotton Shirt", "Jute Bag", "Hand-woven Scarf", "School Uniform", "Traditional Vest"],
+            furn: ["Bamboo Chair", "Study Table", "Folding Stool", "Bedside Lamp", "Wall Shelf"]
+        };
 
         function authenticate() {
             const key = document.getElementById('access-key').value.trim().toUpperCase();
-            if(key === 'SW-MASTER-999') {
-                userRole = "MASTER";
-                showTab('master-dash');
-            } else if(key.startsWith('MA')) {
-                userRole = "MOTHER";
-                showTab('mother-dash');
-            } else if(key.startsWith('US')) {
-                userRole = "USER";
-                showTab('market-screen');
-            } else {
-                alert("Invalid Access Key");
-                return;
-            }
+            if(key === 'SW-MASTER-999' || key === 'SW-K2-001') { userRole = "MASTER"; showTab('master-dash'); }
+            else if(key.startsWith('MA')) { userRole = "MOTHER"; showTab('mother-dash'); }
+            else if(key.startsWith('OB')) { userRole = "OBSERVER"; showTab('observer-dash'); }
+            else if(key.startsWith('US')) { userRole = "USER"; showTab('market-screen'); }
+            else { alert("Access Denied"); return; }
+            
             document.getElementById('main-nav').style.display = 'flex';
+            loadMarket();
+        }
+
+        function loadMarket() {
+            const render = (id, list, icon) => {
+                const el = document.getElementById(id);
+                el.innerHTML = list.map(name => `
+                    <div class="product-card">
+                        <div class="product-img">${icon}</div>
+                        <div class="product-info">
+                            <div class="maker-tag">Made by Village Women</div>
+                            <b>${name}</b>
+                            <span class="price">$5.00 / ৳ 550</span>
+                        </div>
+                    </div>
+                `).join('');
+            };
+            render('food-grid', categories.food, '🍞');
+            render('cloth-grid', categories.cloth, '👕');
+            render('furn-grid', categories.furn, '🪑');
         }
 
         function showTab(id) {
@@ -143,19 +167,10 @@
             else if(type === 'dash') {
                 if(userRole === "MASTER") showTab('master-dash');
                 else if(userRole === "MOTHER") showTab('mother-dash');
+                else if(userRole === "OBSERVER") showTab('observer-dash');
                 else showTab('market-screen');
             }
         }
-
-        function openProduct(name) {
-            alert("Swaraj AI: Processing order for " + name + ". This product supports a village family.");
-        }
-
-        // অফলাইন হ্যান্ডলিং
-        window.addEventListener('offline', () => {
-            document.getElementById('connection-status').innerText = "● Offline Mode | SMS Sync Active";
-            document.getElementById('connection-status').style.background = "#fff3cd";
-        });
     </script>
 </body>
 </html>
