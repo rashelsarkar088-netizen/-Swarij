@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swaraj Super App v3.0</title>
+    <title>Swaraj Super App v4.0</title>
     <style>
         :root { --primary: #007bff; --success: #28a745; --dark: #0a0a0a; --gray: #1a1a1a; --accent: #f39c12; }
         body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; }
@@ -16,12 +16,16 @@
         
         /* Marketplace Grid */
         .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
-        .category-card { background: #222; padding: 20px; border-radius: 10px; text-align: center; border: 1px solid #333; transition: 0.3s; }
-        .category-card:active { transform: scale(0.95); background: var(--primary); }
+        .category-card { background: #222; padding: 20px; border-radius: 10px; text-align: center; border: 1px solid #333; cursor: pointer; }
+        .category-card:active { background: var(--primary); }
         .icon { font-size: 30px; margin-bottom: 10px; display: block; }
-        .label { font-size: 14px; font-weight: bold; }
         
-        .section-title { font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 5px; margin-top: 20px; color: var(--accent); text-align: left; }
+        /* Product List */
+        .product-item { display: flex; justify-content: space-between; align-items: center; background: #111; padding: 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #333; }
+        .product-info h4 { margin: 0; color: var(--accent); }
+        .product-info p { margin: 5px 0 0; font-size: 12px; color: #888; }
+        .buy-btn { width: auto; padding: 8px 15px; background: var(--success); font-size: 12px; }
+
         .wallet-bar { display: flex; justify-content: space-between; background: #111; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
         
         /* Calculator Mask */
@@ -41,62 +45,65 @@
         </div>
         <input type="text" id="swaraj-id" placeholder="আপনার স্বরাজ-আইডি দিন (US-001)">
         <button onclick="handleLogin()">প্রবেশ করুন</button>
-        <p style="color:#444; font-size:12px; text-align:center; margin-top:20px;">ID: SW-K2-001 (Commander) | US-001 (User)</p>
     </div>
 
-    <!-- ২. নাগরিক মার্কেটপ্লেস (User Dashboard) -->
+    <!-- ২. নাগরিক মার্কেটপ্লেস -->
     <div id="user-dash" class="screen">
         <div class="wallet-bar">
             <span>ID: <b id="display-user-id"></b></span>
-            <span>টোকেন ব্যালেন্স: <b style="color:var(--success);">৳ ৪৫০</b></span>
+            <span>টোকেন ব্যালেন্স: <b style="color:var(--success);">৳ <span id="user-balance">450</span></b></span>
         </div>
         
-        <div class="section-title">🛒 পণ্য ক্যাটাগরি</div>
-        <div class="grid-container">
-            <div class="category-card" onclick="alert('বেকারি ও মশলা লোড হচ্ছে...')">
-                <span class="icon">🍞</span><span class="label">খাদ্য ও মশলা</span>
+        <div id="category-view">
+            <h3 style="text-align:left;">🛒 পণ্য ক্যাটাগরি</h3>
+            <div class="grid-container">
+                <div class="category-card" onclick="showProducts('food')">
+                    <span class="icon">🍞</span><span class="label">খাদ্য ও মশলা</span>
+                </div>
+                <div class="category-card" onclick="alert('শীঘ্রই আসছে...')">
+                    <span class="icon">👕</span><span class="label">পোশাক</span>
+                </div>
             </div>
-            <div class="category-card" onclick="alert('পোশাক কালেকশন লোড হচ্ছে...')">
-                <span class="icon">👕</span><span class="label">পোশাক</span>
-            </div>
-            <div class="category-card" onclick="alert('ফার্নিচার ডিজাইন লোড হচ্ছে...')">
-                <span class="icon">🪑</span><span class="label">ফার্নিচার</span>
-            </div>
-            <div class="category-card" onclick="alert('হোম অ্যাপ্লায়েন্স লোড হচ্ছে...')">
-                <span class="icon">🔌</span><span class="label">হোম অ্যাপ্লায়েন্স</span>
+            <h3 style="text-align:left; margin-top:20px;">🛠️ সেবা ক্যাটাগরি</h3>
+            <div class="grid-container">
+                <div class="category-card" onclick="alert('ডাক্তার কল হচ্ছে...')">
+                    <span class="icon">🏥</span><span class="label">স্বাস্থ্য সেবা</span>
+                </div>
+                <div class="category-card" onclick="alert('ক্লাস লোড হচ্ছে...')">
+                    <span class="icon">📚</span><span class="label">শিক্ষা</span>
+                </div>
             </div>
         </div>
 
-        <div class="section-title">🛠️ সেবা ক্যাটাগরি</div>
-        <div class="grid-container">
-            <div class="category-card" onclick="alert('ডাক্তার ও অ্যাম্বুলেন্স কল হচ্ছে...')">
-                <span class="icon">🏥</span><span class="label">স্বাস্থ্য সেবা</span>
+        <!-- পণ্য তালিকা (Hidden by default) -->
+        <div id="product-view" style="display:none;">
+            <button onclick="showCategories()" style="background:#333; margin-bottom:15px;">⬅️ ফিরে যান</button>
+            <h3>খাদ্য ও মশলা তালিকা</h3>
+            <div class="product-item">
+                <div class="product-info">
+                    <h4>স্মার্ট পুষ্টি বান (FPC)</h4>
+                    <p>২০ টাকা | ৩৫০ kcal</p>
+                </div>
+                <button class="buy-btn" onclick="orderProduct('পুষ্টি বান', 20)">অর্ডার</button>
             </div>
-            <div class="category-card" onclick="alert('অনলাইন ক্লাস ও লাইব্রেরি...')">
-                <span class="icon">📚</span><span class="label">শিক্ষা ও ট্রেনিং</span>
-            </div>
-            <div class="category-card" onclick="alert('সালিসি বোর্ড ও আইনি সহায়তা...')">
-                <span class="icon">⚖️</span><span class="label">আইনি সেবা</span>
-            </div>
-            <div class="category-card" onclick="alert('ই-বাইক ও লজিস্টিক...')">
-                <span class="icon">🛵</span><span class="label">পরিবহন</span>
+            <div class="product-item">
+                <div class="product-info">
+                    <h4>অরগানিক হলুদ গুঁড়ো</h4>
+                    <h4>৪০ টাকা | ১০০ গ্রাম</h4>
+                </div>
+                <button class="buy-btn" onclick="orderProduct('হলুদ গুঁড়ো', 40)">অর্ডার</button>
             </div>
         </div>
         
-        <button onclick="logout()" style="margin-top:20px; background:#333;">লগ-আউট</button>
+        <button onclick="logout()" style="margin-top:auto; background:#333;">লগ-আউট</button>
     </div>
 
-    <!-- ৩. কমান্ডারের ড্যাশবোর্ড (SW-K2-001) -->
+    <!-- ৩. কমান্ডারের ড্যাশবোর্ড -->
     <div id="commander-dash" class="screen">
         <h2>K2-HQ কমান্ড সেন্টার</h2>
         <div class="card" style="border-color:var(--success); text-align:center;">
             <p>১০ ৳ স্পন্দন (Velocity)</p>
-            <h1 style="color:var(--success); margin:0;">৪৫০,০০০</h1>
-        </div>
-        <div class="card">
-            <h3>অপারেশন স্ট্যাটাস</h3>
-            <p>সৈনিক: ২০০ | পরিবার: ৪,০০০</p>
-            <p>অর্থনৈতিক নিয়ন্ত্রণ: ৪.৫%</p>
+            <h1 id="hq-pulse" style="color:var(--success); margin:0;">450,000</h1>
         </div>
         <button onclick="openGhostMode()" style="background:#333;">GHOST MODE (গোপন)</button>
         <button onclick="logout()">লগ-আউট</button>
@@ -114,18 +121,40 @@
     </div>
 
     <script>
+        let pulse = 450000;
+        let balance = 450;
+
         function handleLogin() {
             const id = document.getElementById('swaraj-id').value.trim();
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            
             if(id === 'SW-K2-001') {
                 document.getElementById('commander-dash').classList.add('active');
+                document.getElementById('hq-pulse').innerText = pulse.toLocaleString();
             } else if(id.startsWith('US')) {
                 document.getElementById('user-dash').classList.add('active');
                 document.getElementById('display-user-id').innerText = id;
+            }
+        }
+
+        function showProducts(cat) {
+            document.getElementById('category-view').style.display = 'none';
+            document.getElementById('product-view').style.display = 'block';
+        }
+
+        function showCategories() {
+            document.getElementById('category-view').style.display = 'block';
+            document.getElementById('product-view').style.display = 'none';
+        }
+
+        function orderProduct(name, price) {
+            if(balance >= price) {
+                balance -= price;
+                pulse += (price / 10); // ১০ টাকার স্পন্দন বৃদ্ধি
+                document.getElementById('user-balance').innerText = balance;
+                alert(name + " অর্ডার সফল! ১০ ৳ স্পন্দন K2-HQ এ পাঠানো হয়েছে।");
+                showCategories();
             } else {
-                alert("Invalid ID! Use US-001 for User or SW-K2-001 for Commander.");
-                document.getElementById('login-screen').classList.add('active');
+                alert("পর্যাপ্ত টোকেন নেই!");
             }
         }
 
@@ -135,22 +164,9 @@
         }
 
         let calcInput = "";
-        function press(num) {
-            calcInput += num;
-            document.getElementById('display').innerText = calcInput;
-        }
+        function press(num) { calcInput += num; document.getElementById('display').innerText = calcInput; }
         function resetCalc() { calcInput = ""; document.getElementById('display').innerText = "0"; }
-
-        function checkSecret() {
-            if(calcInput === "777") {
-                alert("Nexus Command Center: Access Granted.");
-                resetCalc();
-            } else {
-                alert("Error: Result not found.");
-                resetCalc();
-            }
-        }
-
+        function checkSecret() { if(calcInput === "777") { alert("Nexus Command Center: Access Granted."); resetCalc(); } else { alert("Error"); resetCalc(); } }
         function logout() { location.reload(); }
     </script>
 </body>
