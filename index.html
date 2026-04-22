@@ -3,183 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swaraj Super App v6.0</title>
+    <title>Swaraj Nexus v7.0</title>
     <style>
-        :root { --primary: #007bff; --success: #28a745; --dark: #0a0a0a; --gray: #1a1a1a; --accent: #f39c12; --danger: #dc3545; --purple: #6f42c1; }
-        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; }
-        .screen { width: 100%; min-height: 100vh; display: none; flex-direction: column; padding: 15px; box-sizing: border-box; }
+        :root { --neon-blue: #00f3ff; --neon-green: #39ff14; --dark-bg: #050505; --glass: rgba(255, 255, 255, 0.1); }
+        body { background: var(--dark-bg); color: white; font-family: 'Courier New', monospace; margin: 0; overflow-x: hidden; }
+        
+        /* Sci-Fi Background Animation */
+        body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #111 10%, transparent 10%); background-size: 20px 20px; opacity: 0.1; z-index: -1; }
+
+        .screen { width: 100%; min-height: 100vh; display: none; flex-direction: column; padding: 20px; box-sizing: border-box; animation: fadeIn 0.5s ease; }
         .active { display: flex; }
-        h1, h2, h3 { color: var(--primary); text-align: center; margin: 10px 0; }
-        input, select, textarea { padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: var(--gray); color: white; width: 100%; box-sizing: border-box; }
-        button { padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 5px; }
-        .card { background: var(--gray); padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--primary); }
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .stat-box { background: #222; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #333; }
-        .pulse-text { color: var(--success); font-size: 24px; font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        .glass-card { background: var(--glass); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; margin-bottom: 15px; box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); }
+        
+        h1, h2 { text-shadow: 0 0 10px var(--neon-blue); color: var(--neon-blue); text-transform: uppercase; }
+        
+        .nexus-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .nexus-node { background: rgba(0, 243, 255, 0.05); border: 1px solid var(--neon-blue); padding: 20px; border-radius: 10px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .nexus-node:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 20px var(--neon-blue); }
+
+        button { background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
+        button:hover { background: var(--neon-green); color: black; box-shadow: 0 0 15px var(--neon-green); }
+
+        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid var(--neon-blue); z-index: 100; }
         
         /* Live Feed */
-        .live-feed { width: 100%; height: 150px; background: #000; border-radius: 10px; display: flex; justify-content: center; align-items: center; position: relative; border: 1px solid red; }
-        .dot { width: 10px; height: 10px; background: red; border-radius: 50%; animation: blink 1s infinite; position: absolute; top: 10px; left: 10px; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+        .live-cam { width: 100%; height: 150px; background: #000; border: 1px solid red; border-radius: 10px; position: relative; overflow: hidden; }
+        .scan-line { width: 100%; height: 2px; background: rgba(255,0,0,0.5); position: absolute; animation: scan 2s infinite; }
+        @keyframes scan { from { top: 0; } to { top: 100%; } }
 
-        /* Calculator Mask */
-        .calc-display { background: #222; padding: 20px; font-size: 30px; text-align: right; border-radius: 10px; margin-bottom: 10px; height: 50px; }
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .calc-grid button { background: #333; height: 60px; margin: 0; color: white; border: none; }
+        /* Chatbot */
+        #ai-bot { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; background: var(--neon-blue); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; box-shadow: 0 0 15px var(--neon-blue); }
     </style>
 </head>
 <body>
 
-    <!-- ১. সার্বজনীন লগ-ইন -->
-    <div id="login-screen" class="screen active">
+    <!-- ১. নেক্সাস এন্ট্রি (Unified Entry) -->
+    <div id="nexus-screen" class="screen active">
         <div style="text-align:center; margin-top:40px;">
-            <div style="font-size: 50px;">☀️</div>
-            <h1>SWARAJ</h1>
-            <p style="color:#666;">Virtual Territory of K2</p>
+            <div style="font-size: 60px; filter: drop-shadow(0 0 10px var(--neon-blue));">💠</div>
+            <h1>SWARAJ NEXUS</h1>
+            <p id="offline-status" style="color:var(--neon-green);">[ SYSTEM ONLINE ]</p>
         </div>
-        <input type="text" id="swaraj-id" placeholder="আপনার আইডি দিন (যেমন: SW-K2-001)">
-        <button onclick="handleLogin()">প্রবেশ করুন</button>
-        <div style="font-size:10px; color:#444; margin-top:20px; text-align:center;">
-            SW: Commander | MA: Mother | TR: Teacher | RS: Researcher | AU: Auditor | OB: Observer | US: User
+        
+        <div class="nexus-grid">
+            <div class="nexus-node" onclick="enterPortal('SW')">COMMANDER</div>
+            <div class="nexus-node" onclick="enterPortal('MA')">MOTHER</div>
+            <div class="nexus-node" onclick="enterPortal('TR')">TEACHER</div>
+            <div class="nexus-node" onclick="enterPortal('US')">MARKET</div>
+        </div>
+        
+        <div class="glass-card" style="margin-top:30px;">
+            <input type="text" id="access-id" placeholder="ENTER ACCESS KEY">
+            <button onclick="validateAccess()">INITIATE AUTHENTICATION</button>
         </div>
     </div>
 
-    <!-- ২. কমান্ডারের ড্যাশবোর্ড (SW) -->
-    <div id="commander-dash" class="screen">
-        <h2>K2-HQ কমান্ড সেন্টার</h2>
-        <div class="stat-box">
-            <p>১০ ৳ স্পন্দন (Velocity)</p>
-            <div class="pulse-text" id="hq-pulse">450,000</div>
-        </div>
-        <div class="grid" style="margin-top:10px;">
-            <div class="stat-box"><h3>সৈনিক</h3><p>২০০</p></div>
-            <div class="stat-box"><h3>নিয়ন্ত্রণ</h3><p>৪.৫%</p></div>
-        </div>
-        <button onclick="openGhostMode()" style="background:#333;">GHOST MODE</button>
-        <button onclick="logout()">লগ-আউট</button>
-    </div>
-
-    <!-- ৩. মা পোর্টাল (MA) -->
+    <!-- ২. মা পোর্টাল (MA) -->
     <div id="mother-dash" class="screen">
-        <h2>মা পোর্টাল</h2>
-        <div class="live-feed"><div class="dot"></div><p>LIVE: GARDEN-1</p></div>
-        <div class="card">
-            <h3>সন্তানের পুষ্টি রিপোর্ট</h3>
-            <p>মেনু: সবজি-কিমা পোলাও | ৩৫০ kcal</p>
+        <h2>MATERNAL OVERWATCH</h2>
+        <div class="live-cam"><div class="scan-line"></div><p style="text-align:center; margin-top:60px; color:red;">FEED: GARDEN-1</p></div>
+        <div class="nexus-grid">
+            <button onclick="alert('Requesting Video Call to Outlet...')">📞 CALL OUTLET</button>
+            <button onclick="alert('Tiffin Time Request Sent')">🕒 TIFFIN CONNECT</button>
         </div>
-        <button onclick="alert('খাবার অনুমোদিত। স্পন্দন রেকর্ড করা হলো।')" style="background:var(--success);">খাবার অনুমোদন করুন</button>
-        <button onclick="logout()">লগ-আউট</button>
+        <div class="glass-card" style="margin-top:20px;">
+            <p>NUTRITION: OPTIMAL</p>
+            <button onclick="switchTab('market')">🛒 GO TO MARKET</button>
+        </div>
     </div>
 
-    <!-- ৪. শিক্ষক পোর্টাল (TR) -->
-    <div id="teacher-dash" class="screen">
-        <h2>শিক্ষক পোর্টাল</h2>
-        <div class="card" style="text-align:center; padding:30px;">
-            <div style="font-size:40px;">📷</div>
-            <p>QR কোড স্ক্যান করুন</p>
+    <!-- ৩. স্বরাজ মার্কেটপ্লেস (Market) -->
+    <div id="market-screen" class="screen">
+        <h2>SWARAJ MARKET</h2>
+        <div class="glass-card">
+            <p>BALANCE: ৳ <span id="bal">450</span></p>
         </div>
-        <input type="number" placeholder="ছাত্রের রেটিং (১-৫)">
-        <button style="background:var(--purple);">টোকেন প্রদান করুন</button>
-        <button onclick="logout()">লগ-আউট</button>
+        <div class="nexus-grid">
+            <div class="nexus-node" onclick="buy('Food')">🍞 FOOD</div>
+            <div class="nexus-node" onclick="buy('Cloth')">👕 CLOTH</div>
+            <div class="nexus-node" onclick="buy('Health')">🏥 HEALTH</div>
+            <div class="nexus-node" onclick="buy('Edu')">📚 EDU</div>
+        </div>
+        <button onclick="switchTab('back')" style="margin-top:20px;">BACK TO DASHBOARD</button>
     </div>
 
-    <!-- ৫. গবেষক ড্যাশবোর্ড (RS) -->
-    <div id="researcher-dash" class="screen">
-        <h2>ফিল্ড রিসার্চ পোর্টাল</h2>
-        <div class="card">
-            <p>আজকের টাস্ক: ৫টি পরিবার জরিপ</p>
-            <p>অর্জিত স্টাইপেন্ড: ৳ ১৫০</p>
+    <!-- ৪. কমান্ডারের ড্যাশবোর্ড (Master) -->
+    <div id="master-dash" class="screen">
+        <h2>SUPREME COMMAND</h2>
+        <div class="glass-card">
+            <p>TOTAL PULSE: <span style="color:var(--neon-green);">890,450,000</span></p>
+            <p>ACTIVE AGENTS: 200</p>
+            <p>TERRITORY CONTROL: 20%</p>
         </div>
-        <input type="text" placeholder="পরিবার আইডি">
-        <textarea placeholder="ব্যয়ের তথ্য ইনপুট দিন..."></textarea>
-        <button>ডাটা সিঙ্ক করুন</button>
-        <button onclick="logout()">লগ-আউট</button>
+        <button onclick="alert('Opening Global Map...')">🌐 GLOBAL MAP</button>
+        <button onclick="logout()">TERMINATE SESSION</button>
     </div>
 
-    <!-- ৬. অডিটর ড্যাশবোর্ড (AU) -->
-    <div id="auditor-dash" class="screen">
-        <h2>সিস্টেম অডিট (কলেজ শিক্ষক)</h2>
-        <div class="card">
-            <h3>ইমপ্যাক্ট অ্যানালিটিক্স</h3>
-            <p>পুষ্টির মান: ৯৮% (ভেরিফাইড)</p>
-            <p>লিকেজ গ্যাপ: ০.০২%</p>
-        </div>
-        <button style="background:var(--accent);">রিপোর্ট ডাউনলোড করুন</button>
-        <button onclick="logout()">লগ-আউট</button>
-    </div>
+    <!-- ৫. এআই চ্যাটবট -->
+    <div id="ai-bot" onclick="alert('Swaraj AI: How can I assist your purchase today?')">🤖</div>
 
-    <!-- ৭. অবজারভার ড্যাশবোর্ড (OB - DC/Principal) -->
-    <div id="observer-dash" class="screen">
-        <h2>স্বচ্ছতা ড্যাশবোর্ড (DC/Principal)</h2>
-        <div class="stat-box">
-            <p>সরকারি ফাণ্ড ব্যবহার</p>
-            <div class="pulse-text" style="color:var(--primary);">৳ ১২,৫০,০০০</div>
-        </div>
-        <div class="card" style="margin-top:10px;">
-            <p>সফল বিতরণ: ১২,৪৫০ প্যাকেট</p>
-            <p>অভিযোগ: ০টি</p>
-        </div>
-        <button onclick="logout()">লগ-আউট</button>
-    </div>
-
-    <!-- ৮. সাধারণ ইউজার (US) -->
-    <div id="user-dash" class="screen">
-        <div style="display:flex; justify-content:space-between;">
-            <span>ID: <b id="display-user-id"></b></span>
-            <span>ব্যালেন্স: <b style="color:var(--success);">৳ ৪৫০</b></span>
-        </div>
-        <h3>🛒 স্বরাজ মার্কেটপ্লেস</h3>
-        <div class="grid">
-            <div class="stat-box" onclick="alert('খাদ্য তালিকা লোড হচ্ছে...')">🍞<br>খাদ্য</div>
-            <div class="stat-box" onclick="alert('পোশাক তালিকা লোড হচ্ছে...')">👕<br>পোশাক</div>
-            <div class="stat-box" onclick="alert('স্বাস্থ্য সেবা...')">🏥<br>স্বাস্থ্য</div>
-            <div class="stat-box" onclick="alert('শিক্ষা...')">📚<br>শিক্ষা</div>
-        </div>
-        <button onclick="logout()" style="margin-top:auto;">লগ-আউট</button>
-    </div>
-
-    <!-- ৯. ঘোস্ট মোড (ক্যালকুলেটর) -->
-    <div id="ghost-screen" class="screen">
-        <div class="calc-display" id="display">0</div>
-        <div class="calc-grid">
-            <button onclick="press(7)">7</button><button onclick="press(8)">8</button><button onclick="press(9)">9</button><button>/</button>
-            <button onclick="press(4)">4</button><button onclick="press(5)">5</button><button onclick="press(6)">6</button><button>*</button>
-            <button onclick="press(1)">1</button><button onclick="press(2)">2</button><button onclick="press(3)">3</button><button>-</button>
-            <button onclick="press(0)">0</button><button onclick="resetCalc()">C</button><button onclick="checkSecret()" style="background:var(--success);">=</button><button>+</button>
-        </div>
+    <!-- নেভিগেশন বার -->
+    <div class="nav-bar" id="nav" style="display:none;">
+        <button onclick="switchTab('nexus')">NEXUS</button>
+        <button onclick="switchTab('market')">MARKET</button>
+        <button onclick="logout()">EXIT</button>
     </div>
 
     <script>
-        function handleLogin() {
-            const id = document.getElementById('swaraj-id').value.trim().toUpperCase();
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            
-            if(id === 'SW-K2-001') document.getElementById('commander-dash').classList.add('active');
-            else if(id.startsWith('MA')) document.getElementById('mother-dash').classList.add('active');
-            else if(id.startsWith('TR')) document.getElementById('teacher-dash').classList.add('active');
-            else if(id.startsWith('RS')) document.getElementById('researcher-dash').classList.add('active');
-            else if(id.startsWith('AU')) document.getElementById('auditor-dash').classList.add('active');
-            else if(id.startsWith('OB')) document.getElementById('observer-dash').classList.add('active');
-            else if(id.startsWith('US')) {
-                document.getElementById('user-dash').classList.add('active');
-                document.getElementById('display-user-id').innerText = id;
+        let currentRole = "";
+
+        function validateAccess() {
+            const id = document.getElementById('access-id').value.trim().toUpperCase();
+            if(id === 'SW-MASTER-999') {
+                showScreen('master-dash');
+                document.getElementById('nav').style.display = 'flex';
+            } else if(id.startsWith('MA')) {
+                currentRole = "MA";
+                showScreen('mother-dash');
+                document.getElementById('nav').style.display = 'flex';
+            } else if(id.startsWith('US')) {
+                showScreen('market-screen');
+                document.getElementById('nav').style.display = 'flex';
+            } else {
+                alert("ACCESS DENIED: INVALID KEY");
             }
-            else alert("ভুল আইডি! সঠিক প্রিফিক্স ব্যবহার করুন (SW, MA, TR, RS, AU, OB, US)");
         }
 
-        function openGhostMode() {
+        function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('ghost-screen').classList.add('active');
+            document.getElementById(id).classList.add('active');
         }
 
-        let calcInput = "";
-        function press(num) { calcInput += num; document.getElementById('display').innerText = calcInput; }
-        function resetCalc() { calcInput = ""; document.getElementById('display').innerText = "0"; }
-        function checkSecret() {
-            if(calcInput === "777") { alert("Nexus: সৈনিক এনরোলমেন্ট সচল।"); resetCalc(); }
-            else { alert("Error"); resetCalc(); }
+        function switchTab(target) {
+            if(target === 'market') showScreen('market-screen');
+            else if(target === 'nexus') showScreen('nexus-screen');
+            else if(target === 'back') {
+                if(currentRole === "MA") showScreen('mother-dash');
+                else showScreen('nexus-screen');
+            }
         }
+
+        function buy(item) {
+            alert(item + " Order Initiated. AI processing...");
+        }
+
         function logout() { location.reload(); }
+
+        // অফলাইন সিমুলেশন
+        window.addEventListener('offline', () => {
+            document.getElementById('offline-status').innerText = "[ OFFLINE MODE: SMS SYNC ACTIVE ]";
+            document.getElementById('offline-status').style.color = "orange";
+        });
     </script>
 </body>
 </html>
